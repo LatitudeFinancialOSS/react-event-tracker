@@ -1,0 +1,52 @@
+{
+  "name": "react-event-tracker",
+  "version": "1.0.0",
+  "description": "Easily track events in your React application",
+  "main": "dist/index.js",
+  "scripts": {
+    "prettier": "prettier --write \"**/*.{js,json,md}\"",
+    "lint": "eslint --max-warnings 0 \"**/*.js\"",
+    "test": "echo \"Coming soon!\"",
+    "transpile": "rimraf dist && babel src -d dist --ignore \"src/**/*.test.js\""
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run prettier && npm run lint"
+    }
+  },
+  "peerDependencies": {
+    "react": "^16.8.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.6.0",
+    "@babel/core": "^7.6.0",
+    "@babel/preset-env": "^7.6.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.4.0",
+    "eslint-plugin-react": "^7.14.3",
+    "husky": "^3.0.5",
+    "prettier": "^1.18.2",
+    "react": "^16.9.0",
+    "rimraf": "^3.0.0"
+  },
+  "keywords": [
+    "react",
+    "event",
+    "tracker",
+    "analytics"
+  ],
+  "homepage": "https://github.com/moroshko/react-event-tracker",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/moroshko/react-event-tracker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/moroshko/react-event-tracker/issues"
+  },
+  "files": [
+    "dist"
+  ],
+  "author": "Misha Moroshko <michael.moroshko@gmail.com>",
+  "license": "MIT"
+}
