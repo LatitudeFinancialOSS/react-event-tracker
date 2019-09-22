@@ -6,10 +6,6 @@
 npm install --save react-event-tracker
 ```
 
-## Supported trackers
-
-- [Tealium](https://tealium.com) - See [tealium-tracker](https://github.com/moroshko/tealium-tracker)
-
 ## How to use
 
 **App.js** - root level component
@@ -146,3 +142,7 @@ function AnotherComponent({ trackEvent }) {
 
 export default withEventTracking(AnotherComponent);
 ```
+
+## Related
+
+- [tealium-tracker](https://github.com/moroshko/tealium-tracker) - Easily integrate with [Tealium](https://tealium.com)
