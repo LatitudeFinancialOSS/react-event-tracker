@@ -1,13 +1,14 @@
 {
   "name": "react-event-tracker",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Easily track events in your React application",
   "main": "dist/index.js",
   "scripts": {
     "prettier": "prettier --write \"**/*.{js,json,md}\"",
     "lint": "eslint --max-warnings 0 \"**/*.js\"",
     "test": "echo \"Coming soon!\"",
-    "transpile": "rimraf dist && babel src -d dist --ignore \"src/**/*.test.js\""
+    "transpile": "rimraf dist && babel src -d dist --ignore \"src/**/*.test.js\"",
+    "prepublish": "npm run transpile"
   },
   "husky": {
     "hooks": {
