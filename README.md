@@ -6,6 +6,10 @@
 npm install --save react-event-tracker
 ```
 
+## Supported trackers
+
+- [Tealium](https://tealium.com) - See [tealium-tracker](https://github.com/moroshko/tealium-tracker)
+
 ## How to use
 
 **App.js** - root level component
