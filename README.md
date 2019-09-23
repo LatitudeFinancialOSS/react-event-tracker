@@ -32,7 +32,7 @@ const myTracker = {
 
 export default withSiteTracking(App, {
   siteData,
-  connectTo: myTracker
+  connectTo: myTracker // Omit this if server rendering
 });
 ```
 
