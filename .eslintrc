@@ -6,6 +6,9 @@
     "es6": true,
     "node": true
   },
+  "rules": {
+    "react/prop-types": 0
+  },
   "settings": {
     "react": {
       "version": "detect"

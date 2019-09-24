@@ -36,6 +36,30 @@ export default withSiteTracking(App, {
 });
 ```
 
+or, you can wrap your root level component with `WithSiteTracking`:
+
+```js
+import { WithSiteTracking } from "react-event-tracker";
+
+const siteData = {
+  site: "my site"
+};
+
+const myTracker = {
+  trackEvent: ({ siteData, pageData, eventData }) => {
+    ...
+  }
+};
+
+function App() {
+  return (
+    <WithSiteTracking siteData={siteData} connectTo={myTracker}>
+      {/* Your root level component */}
+    </WithSiteTracking>
+  )
+}
+```
+
 **ProductPage.js** - page level component
 
 ```js
