@@ -1,6 +1,6 @@
 # react-event-tracker
 
-## Installation
+## Install
 
 ```shell
 npm install --save react-event-tracker
