@@ -6,7 +6,7 @@ function withEventTracking(Component) {
   return function WithEventTracking(props) {
     return (
       <SiteContext.Consumer>
-        {({ siteData, inject }) => (
+        {({ siteData, inject = {} }) => (
           <PageContext.Consumer>
             {pageData => (
               <Component
