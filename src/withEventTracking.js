@@ -6,34 +6,17 @@ function withEventTracking(Component) {
   return function WithEventTracking(props) {
     return (
       <SiteContext.Consumer>
-        {({ siteData, connectTo }) => (
+        {({ siteData, inject }) => (
           <PageContext.Consumer>
             {pageData => (
               <Component
                 {...props}
-                trackEvent={eventData => {
-                  if (typeof connectTo.trackEvent === "function") {
-                    connectTo.trackEvent({
-                      siteData,
-                      pageData,
-                      eventData
-                    });
-                  }
-                }}
-                getQueryString={eventData => {
-                  if (typeof connectTo.getQueryString === "function") {
-                    return connectTo.getQueryString({
-                      siteData,
-                      pageData,
-                      eventData
-                    });
-                  }
-
-                  console.error(
-                    `react-event-tracker: connected tracker doesn't expose getQueryString`
-                  );
-                  return "";
-                }}
+                {...Object.keys(inject).reduce((acc, prop) => {
+                  acc[prop] = eventData => {
+                    return inject[prop]({ siteData, pageData, eventData });
+                  };
+                  return acc;
+                }, {})}
               />
             )}
           </PageContext.Consumer>

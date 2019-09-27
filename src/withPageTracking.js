@@ -3,12 +3,12 @@ import { SiteContext } from "./withSiteTracking";
 
 export const PageContext = React.createContext();
 
-function PageWrapper({ siteData, pageData, connectTo, children }) {
+function PageWrapper({ siteData, pageData, onPageLoad, children }) {
   useEffect(() => {
-    if (typeof connectTo.trackPageLoad === "function") {
-      connectTo.trackPageLoad({ siteData, pageData });
+    if (typeof onPageLoad === "function") {
+      onPageLoad({ siteData, pageData });
     }
-  }, [siteData, pageData, connectTo]);
+  }, [siteData, pageData, onPageLoad]);
 
   return children;
 }
@@ -17,12 +17,12 @@ function withPageTracking(PageComponent, { pageData }) {
   return function WithPageTracking(props) {
     return (
       <SiteContext.Consumer>
-        {({ siteData, connectTo }) => (
+        {({ siteData, onPageLoad }) => (
           <PageContext.Provider value={pageData}>
             <PageWrapper
               siteData={siteData}
               pageData={pageData}
-              connectTo={connectTo}
+              onPageLoad={onPageLoad}
             >
               <PageComponent {...props} />
             </PageWrapper>

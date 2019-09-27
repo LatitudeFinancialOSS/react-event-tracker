@@ -2,16 +2,21 @@ import React from "react";
 
 export const SiteContext = React.createContext();
 
-export const WithSiteTracking = ({ siteData, connectTo, children }) => (
-  <SiteContext.Provider value={{ siteData, connectTo }}>
+export const WithSiteTracking = ({
+  siteData,
+  inject,
+  onPageLoad,
+  children
+}) => (
+  <SiteContext.Provider value={{ siteData, inject, onPageLoad }}>
     {children}
   </SiteContext.Provider>
 );
 
-function withSiteTracking(Component, { siteData, connectTo }) {
+function withSiteTracking(Component, { siteData, inject, onPageLoad }) {
   return function WithSiteTracking(props) {
     return (
-      <SiteContext.Provider value={{ siteData, connectTo }}>
+      <SiteContext.Provider value={{ siteData, inject, onPageLoad }}>
         <Component {...props} />
       </SiteContext.Provider>
     );

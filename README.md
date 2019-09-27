@@ -17,23 +17,23 @@ function App() {
   // Your root level component
 }
 
-// siteData can be any object
-const siteData = {
-  site: "my site"
-};
-
-// Basic tracker. See below for more options.
-const myTracker = {
-  trackEvent: ({ siteData, pageData, eventData }) => {
-    // Do whatever you want with the data.
-    // For example, call your analytics solution API.
+const trackingConfig = {
+  // `siteData` can be anything
+  siteData: {
+    site: "my site"
+  },
+  // Omit `inject` if server-rendering
+  inject: {
+    // `trackEvent` will be injected as a prop.
+    // You can choose any prop name.
+    trackEvent: ({ siteData, pageData, eventData }) => {
+      // Do whatever you want with the data.
+      // For example, call your analytics API.
+    }
   }
 };
 
-export default withSiteTracking(App, {
-  siteData,
-  connectTo: myTracker // Omit this if server rendering
-});
+export default withSiteTracking(App, trackingConfig);
 ```
 
 or, you can wrap your root level component with `WithSiteTracking`:
@@ -41,22 +41,12 @@ or, you can wrap your root level component with `WithSiteTracking`:
 ```js
 import { WithSiteTracking } from "react-event-tracker";
 
-const siteData = {
-  site: "my site"
-};
-
-const myTracker = {
-  trackEvent: ({ siteData, pageData, eventData }) => {
-    ...
-  }
-};
-
 function App() {
   return (
-    <WithSiteTracking siteData={siteData} connectTo={myTracker}>
+    <WithSiteTracking {...trackingConfig}>
       {/* Your root level component */}
     </WithSiteTracking>
-  )
+  );
 }
 ```
 
@@ -68,36 +58,36 @@ import { withPageTracking } from "react-event-tracker";
 function ProductPage() {
   return (
     ...
-    <AnotherComponent />
+    <ProductPageContent />
     ...
   );
 }
 
-// pageData can be any object
+// `pageData` can be anything
 const pageData = {
-  page: "my product"
+  page: "my_product"
 };
 
 export default withPageTracking(ProductPage, { pageData });
 ```
 
-**AnotherComponent.js** - any component deep inside the tree
+**ProductPageContent.js** - any component deep inside the tree
 
 ```js
 import { withEventTracking } from "react-event-tracker";
 
-// The `trackEvent` prop is injected by `withEventTracking`
-function AnotherComponent({ trackEvent }) {
+// The `trackEvent` prop is injected by `withEventTracking` according to the `trackingConfig` above.
+function ProductPageContent({ trackEvent }) {
   return (
     ...
     <button
       onClick={() => {
         /*
-          Here, the magic happens:
+          Here is the core of what this library does.
 
-          We call `trackEvent` (provided by `react-event-tracker`) with `eventData`.
+          You call `trackEvent` (provided by `react-event-tracker`) with `eventData` (can be anything).
 
-          In return, `react-event-tracker` calls our own `trackEvent` (provided by `myTracker` above) with `siteData`, `pageData`, and `eventData`.
+          In return, `react-event-tracker` will call your own `trackEvent` (that you defined in the `trackingConfig` above) with `siteData`, `pageData`, and `eventData`.
         */
         trackEvent({ button: "Apply" });
       }}
@@ -108,33 +98,42 @@ function AnotherComponent({ trackEvent }) {
   )
 }
 
-export default withEventTracking(AnotherComponent);
+export default withEventTracking(ProductPageContent);
 ```
 
-## Automatic page load tracking
+## Tracking page views
 
-If you provide `trackPageLoad` to `myTracker`, `react-event-tracker` will call it once the page component renders.
+Add an `onPageLoad` function to the `trackingConfig`:
 
 ```js
-const myTracker = {
-  trackPageLoad: ({ siteData, pageData }) => {
-    // Do whatever you want with the data.
-    // For example, call your analytics solution API.
+const trackingConfig = {
+  onPageLoad: ({ siteData, pageData, eventData }) => {
+      // Do whatever you want with the data.
+      // For example, call your analytics API.
+    }
   }
 };
 ```
 
-## Building a query string
+`react-event-tracker` will call the `onPageLoad` function once your pages (i.e. components wrapped with `withPageTracking`) finish rendering.
 
-When linking to external sites, you may want to add query string parameters based on `siteData`, `pageData`, and/or `eventData`.
+You could, for example, inspect cookies or `localStorage` here, build your data layer, and then call your analytics API.
 
-Implement the `getQueryString` logic, pass it to `myTracker`, and then use it similarly to `trackEvent`:
+## Writing to `localStorage`
+
+Sometimes, when tracking a page view, you may want to track the traffic source.
+
+For example, say you are tracking page views of the Application page. It could be very useful to know how users have arrived to the Aplication page. Did they click the "Apply" link in the header on the Home page? Maybe the "Apply" link in the footer? Or, maybe, they landed on the Application page after clicking "Apply" on your Product Page?
+
+One way to track this, is to write to `localStorage` when users click the "Apply" link. Then, read from `localStorage` in the `onPageLoad` function.
 
 ```js
-const myTracker = {
-  getQueryString: ({ siteData, pageData, eventData }) => {
-    // Build your query string here, e.g.: foo=1&bar=2
-    // Don't forget to use encodeURIComponent on the values.
+const trackingConfig = {
+  storeTrafficSource: ({ pageData, eventData }) => {
+    localStorage.setItem(
+      "traffic_source",
+      `${pageData.page}:${eventData.source}`
+    );
   }
 };
 ```
@@ -142,16 +141,68 @@ const myTracker = {
 ```js
 import { withEventTracking } from "react-event-tracker";
 
-// The `getQueryString` prop is injected by `withEventTracking`
-function AnotherComponent({ trackEvent }) {
+// The `storeTrafficSource` prop is injected by `withEventTracking` according to the `trackingConfig` above.
+function ProductPageContent({ storeTrafficSource }) {
   return (
     ...
     {/*
-      Here, the magic happens:
+      You call `storeTrafficSource` (provided by `react-event-tracker`) with `eventData`.
 
-      We call `getQueryString` (provided by `react-event-tracker`) with `eventData`.
+      In return, `react-event-tracker` will call your own `storeTrafficSource` (that you defined in the `trackingConfig` above) with `siteData`, `pageData`, and `eventData`.
+    */}
+    <a
+      href="/apply"
+      onClick={() => {
+        // This will write "my_product:apply" to "traffic_source" in `localStorage`.
+        storeTrafficSource({ source: "apply" });
+      }}
+    >
+      Apply
+    </a>
+    ...
+  )
+}
 
-      In return, `react-event-tracker` calls our own `getQueryString` (provided by `myTracker`) with `siteData`, `pageData`, and `eventData`.
+export default withEventTracking(ProductPageContent);
+```
+
+## Building a query string
+
+When linking to external sites, you may want to add query string parameters based on `siteData`, `pageData`, and/or `eventData`.
+
+Add a `getQueryString` function to `inject`, e.g.:
+
+```js
+const trackingConfig = {
+  inject: {
+    getQueryString: ({ siteData, pageData, eventData }) => {
+      const dataLayer = {
+        ...siteData,
+        ...pageData,
+        ...eventData
+      };
+
+      return Object.keys(dataLayer)
+        .map(key => `${key}=${encodeURIComponent(dataLayer[key])}`)
+        .join("&");
+    }
+  }
+};
+```
+
+Then, call `getQueryString` that is injected as a prop:
+
+```js
+import { withEventTracking } from "react-event-tracker";
+
+// The `getQueryString` prop is injected by `withEventTracking` according to the `trackingConfig` above.
+function ProductPageContent({ getQueryString }) {
+  return (
+    ...
+    {/*
+      You call `getQueryString` (provided by `react-event-tracker`) with `eventData`.
+
+      In return, `react-event-tracker` will call your own `getQueryString` (that you defined in the `trackingConfig` above) with `siteData`, `pageData`, and `eventData`.
     */}
     <a
       href={`https://external-site.com?${getQueryString({
@@ -164,7 +215,7 @@ function AnotherComponent({ trackEvent }) {
   )
 }
 
-export default withEventTracking(AnotherComponent);
+export default withEventTracking(ProductPageContent);
 ```
 
 ## Related
