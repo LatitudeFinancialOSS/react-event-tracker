@@ -22,7 +22,6 @@ const trackingConfig = {
   siteData: {
     site: "my site"
   },
-  // Omit `inject` if server-rendering
   inject: {
     // `trackEvent` will be injected as a prop.
     // You can choose any prop name.
