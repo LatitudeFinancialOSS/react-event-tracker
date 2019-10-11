@@ -8,7 +8,13 @@ function withEventTracking(Component, noContextInject) {
       <SiteContext.Consumer>
         {data => {
           if (!data) {
-            return <Component {...props} {...noContextInject} />;
+            if (noContextInject) {
+              return <Component {...props} {...noContextInject} />;
+            }
+
+            throw new Error(
+              "You should wrap your root level component with `withSiteTracking`."
+            );
           }
 
           const { siteData, inject = {} } = data;
