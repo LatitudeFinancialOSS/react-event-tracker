@@ -13,8 +13,13 @@ function PageWrapper({ siteData, pageData, onPageLoad, children }) {
   return children;
 }
 
-function withPageTracking(PageComponent, { pageData }) {
+function withPageTracking(PageComponent, options) {
   return function WithPageTracking(props) {
+    const pageData =
+      typeof options.pageData === "function"
+        ? options.pageData(props)
+        : options.pageData;
+
     return (
       <SiteContext.Consumer>
         {({ siteData, onPageLoad }) => (
