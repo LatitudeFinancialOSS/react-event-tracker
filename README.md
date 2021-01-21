@@ -33,7 +33,11 @@ function App() {
   const { SiteTracking } = useSiteTracking(trackingConfig);
 
   // Wrap your app with SiteTracking
-  return <SiteTracking>...</SiteTracking>;
+  return (
+    <SiteTracking>
+      ...
+    </SiteTracking>
+  );
 }
 ```
 

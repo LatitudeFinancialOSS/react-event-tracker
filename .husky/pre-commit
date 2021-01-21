@@ -1,1 +1,1 @@
-./node_modules/.bin/pretty-quick --staged && npm run lint
+./node_modules/.bin/pretty-quick --staged --pattern "**/*.{js,json}" && npm run lint
