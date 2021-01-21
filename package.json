@@ -4,32 +4,30 @@
   "description": "Easily track events in your React application",
   "main": "dist/index.js",
   "scripts": {
-    "prettier": "prettier --write \"**/*.{js,json,md}\"",
+    "prettier": "prettier --write \"**/*.{js,json}\"",
     "lint": "eslint --max-warnings 0 \"**/*.js\"",
     "test": "echo \"Coming soon!\"",
     "transpile": "rimraf dist && babel src -d dist --ignore \"src/**/*.test.js\"",
-    "prepublish": "npm run transpile"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run prettier && npm run lint"
-    }
+    "prepublish": "npm run transpile",
+    "postinstall": "is-ci || husky install"
   },
   "peerDependencies": {
     "react": "^16.8.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.6.0",
-    "@babel/core": "^7.6.0",
-    "@babel/preset-env": "^7.6.0",
-    "@babel/preset-react": "^7.0.0",
-    "babel-eslint": "^10.0.3",
-    "eslint": "^6.4.0",
-    "eslint-plugin-react": "^7.14.3",
-    "husky": "^3.0.5",
-    "prettier": "^1.18.2",
-    "react": "^16.9.0",
-    "rimraf": "^3.0.0"
+    "@babel/cli": "7.12.10",
+    "@babel/core": "7.12.10",
+    "@babel/preset-env": "7.12.11",
+    "@babel/preset-react": "7.12.10",
+    "babel-eslint": "10.1.0",
+    "eslint": "7.18.0",
+    "eslint-plugin-react": "7.22.0",
+    "husky": "5.0.6",
+    "is-ci": "2.0.0",
+    "prettier": "2.2.1",
+    "pretty-quick": "3.1.0",
+    "react": "17.0.1",
+    "rimraf": "3.0.2"
   },
   "keywords": [
     "react",
