@@ -1,4 +1,3 @@
-export { default as withSiteTracking } from "./withSiteTracking";
-export { WithSiteTracking } from "./withSiteTracking";
-export { default as withPageTracking } from "./withPageTracking";
-export { default as withEventTracking } from "./withEventTracking";
+export { default as useSiteTracking } from "./useSiteTracking";
+export { default as usePageTracking } from "./usePageTracking";
+export { default as useEventTracking } from "./useEventTracking";
