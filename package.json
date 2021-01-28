@@ -16,6 +16,9 @@
   "peerDependencies": {
     "react": "^16.8.0"
   },
+  "dependencies": {
+    "use-deep-compare": "1.1.0"
+  },
   "devDependencies": {
     "@babel/cli": "7.12.10",
     "@babel/core": "7.12.10",

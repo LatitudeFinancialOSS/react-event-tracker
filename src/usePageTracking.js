@@ -1,10 +1,5 @@
-import React, {
-  createContext,
-  useEffect,
-  useCallback,
-  useContext,
-  useRef,
-} from "react";
+import React, { createContext, useEffect, useContext, useRef } from "react";
+import { useDeepCompareCallback } from "use-deep-compare";
 import { SiteTrackingContext } from "./useSiteTracking";
 
 export const PageTrackingContext = createContext();
@@ -17,7 +12,7 @@ export default function usePageTracking(pageData) {
     pageTracking,
   };
   const dataRef = useRef(data);
-  const PageTracking = useCallback(
+  const PageTracking = useDeepCompareCallback(
     ({ children }) => {
       return (
         <PageTrackingContext.Provider value={pageData}>
