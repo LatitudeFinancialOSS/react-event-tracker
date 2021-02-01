@@ -1,6 +1,6 @@
 {
   "name": "react-event-tracker",
-  "version": "4.0.2",
+  "version": "5.0.0",
   "description": "Easily track events in your React application",
   "main": "dist/index.js",
   "scripts": {
