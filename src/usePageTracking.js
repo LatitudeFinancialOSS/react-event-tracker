@@ -1,41 +1,36 @@
-import React, { createContext, useEffect, useContext, useRef } from "react";
-import { useDeepCompareCallback } from "use-deep-compare";
+import { useEffect, useCallback, useContext } from "react";
 import { SiteTrackingContext } from "./useSiteTracking";
 
-export const PageTrackingContext = createContext();
-
-export default function usePageTracking(pageData) {
-  const { siteData, pageTracking } = useContext(SiteTrackingContext);
-  const data = {
-    siteData,
-    pageData,
-    pageTracking,
-  };
-  const dataRef = useRef(data);
-  const PageTracking = useDeepCompareCallback(
-    ({ children }) => {
-      return (
-        <PageTrackingContext.Provider value={pageData}>
-          {children}
-        </PageTrackingContext.Provider>
-      );
-    },
-    [pageData]
+export default function usePageTracking(
+  pageData,
+  { trackPageViewByDefault = true } = {}
+) {
+  const { getSiteData, getPageTracking, setPageData, getPageData } = useContext(
+    SiteTrackingContext
   );
 
-  useEffect(() => {
-    dataRef.current = data;
-  });
+  setPageData(pageData);
 
-  useEffect(() => {
-    const { siteData, pageData, pageTracking } = dataRef.current;
+  const trackPageView = useCallback(() => {
+    const pageTracking = getPageTracking();
 
-    if (typeof pageTracking.onPageLoad === "function") {
-      pageTracking.onPageLoad({ siteData, pageData });
+    if (typeof pageTracking.trackPageView === "function") {
+      pageTracking.trackPageView({
+        siteData: getSiteData(),
+        pageData: getPageData(),
+      });
+    } else {
+      console.error(
+        "react-event-tracker: pageTracking.trackPageView must be a function"
+      );
     }
-  }, []);
+  }, [getPageTracking, getSiteData, getPageData]);
 
-  return {
-    PageTracking,
-  };
+  useEffect(() => {
+    if (trackPageViewByDefault === true) {
+      trackPageView();
+    }
+  }, [trackPageViewByDefault, trackPageView]);
+
+  return { trackPageView };
 }

@@ -18,7 +18,7 @@ const trackingConfig = {
     site: "my site",
   },
   pageTracking: {
-    onPageLoad: ({ siteData, pageData }) => {
+    trackPageView: ({ siteData, pageData }) => {
       // Fire a page view to your analytics solution.
     },
   },
@@ -33,11 +33,7 @@ function App() {
   const { SiteTracking } = useSiteTracking(trackingConfig);
 
   // Wrap your app with SiteTracking
-  return (
-    <SiteTracking>
-      ...
-    </SiteTracking>
-  );
+  return <SiteTracking>...</SiteTracking>;
 }
 ```
 
@@ -46,27 +42,43 @@ function App() {
 ```js
 import { usePageTracking } from "react-event-tracker";
 
-const pageData = {
-  page: "my_product",
-};
+// To automatically fire a page view, just pass the `pageData` to `usePageTracking`. This will call your `trackingConfig.pageTracking.trackPageView` once the page mounts.
+function ProductPage() {
+  usePageTracking({
+    page: "my_product",
+  });
 
+  ...
+}
+
+// If you don't want to fire the page view immediately after the page gets mounted, you can fire it yourself based on any logic you want.
 function ProductPage(props) {
-  const { PageTracking } = usePageTracking(pageData);
+  const [products, setProducts] = useState();
+  const { trackPageView } = usePageTracking({
+    page: "my_product",
+    products // will be fetched from the server
+  }, {
+    trackPageViewByDefault: false
+  });
 
-  return (
-    <PageTracking>
-      <ProductPageContent {...props} />
-    </PageTracking>
-  );
+  useEffect(() => {
+    if (products) {
+      trackPageView();
+    }
+  }, [products, trackPageView]); // react-event-tracker guarantees that trackPageView will never change
+
+  ...
 }
 ```
 
-**ProductPageContent.js** - any component deep inside the tree
+**Note:** Make sure that you never render more than one page level component at a given time.
+
+**Content.js** - any component deep inside the tree
 
 ```js
 import { useEventTracking } from "react-event-tracker";
 
-function ProductPageContent() {
+function Content() {
   const { trackEvent } = useEventTracking();
 
   return (
@@ -90,17 +102,13 @@ function ProductPageContent() {
 }
 ```
 
-## Tracking page views
-
-If you add `onPageLoad` to `trackingConfig.pageTracking`, `react-event-tracker` will call it whenever your page is first mounted. Your page is the component that calls `usePageTracking`.
-
 ## Writing to `localStorage`
 
 Sometimes, when tracking a page view, you may want to track the traffic source.
 
 For example, say you are tracking page views of the Application page. It could be very useful to know how users have arrived to the Application page. Did they click the "Apply" link in the header on the Home page? Maybe the "Apply" link in the footer? Or, maybe, they landed on the Application page after clicking "Apply" on your Product Page?
 
-One way to track this, is to write to `localStorage` when users click the "Apply" link. Then, read from `localStorage` in the `onPageLoad` function.
+One way to track this, is to write to `localStorage` when users click the "Apply" link. Then, read from `localStorage` in the `trackPageView` function.
 
 ```js
 const trackingConfig = {
@@ -119,7 +127,7 @@ const trackingConfig = {
 ```js
 import { useEventTracking } from "react-event-tracker";
 
-function ProductPageContent() {
+function Content() {
   const { storeTrafficSource } = useEventTracking();
 
   return (
@@ -172,7 +180,7 @@ Then, call `getQueryString` that is given to you by `useEventTracking`.
 ```js
 import { useEventTracking } from "react-event-tracker";
 
-function ProductPageContent() {
+function Content() {
   const { getQueryString } = useEventTracking();
 
   return (

@@ -1,21 +1,25 @@
 import { useMemo, useContext } from "react";
-import { PageTrackingContext } from "./usePageTracking";
 import { SiteTrackingContext } from "./useSiteTracking";
 
 export default function useEventTracking() {
-  const { siteData, eventTracking } = useContext(SiteTrackingContext);
-  const pageData = useContext(PageTrackingContext);
+  const { getSiteData, getEventTracking, getPageData } = useContext(
+    SiteTrackingContext
+  );
   const result = useMemo(() => {
+    const eventTracking = getEventTracking();
+
     return Object.keys(eventTracking).reduce((acc, key) => {
       acc[key] = (eventData) => {
         if (typeof eventTracking[key] === "function") {
+          const siteData = getSiteData();
+          const pageData = getPageData();
+
           return eventTracking[key]({ siteData, pageData, eventData });
         }
       };
-
       return acc;
     }, {});
-  }, [siteData, pageData, eventTracking]);
+  }, [getSiteData, getEventTracking, getPageData]);
 
   return result;
 }
