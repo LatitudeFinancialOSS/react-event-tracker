@@ -1,13 +1,17 @@
-import { useEffect, useCallback, useContext } from "react";
+import { useEffect, useMemo, useCallback, useContext } from "react";
 import { SiteTrackingContext } from "./useSiteTracking";
 
 export default function usePageTracking(
   pageData,
   { trackPageViewByDefault = true } = {}
 ) {
-  const { getSiteData, getPageTracking, setPageData, getPageData } = useContext(
-    SiteTrackingContext
-  );
+  const {
+    getSiteData,
+    getPageTracking,
+    getEventTracking,
+    setPageData,
+    getPageData,
+  } = useContext(SiteTrackingContext);
 
   setPageData(pageData);
 

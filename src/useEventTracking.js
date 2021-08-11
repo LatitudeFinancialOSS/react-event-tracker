@@ -2,9 +2,8 @@ import { useMemo, useContext } from "react";
 import { SiteTrackingContext } from "./useSiteTracking";
 
 export default function useEventTracking() {
-  const { getSiteData, getEventTracking, getPageData } = useContext(
-    SiteTrackingContext
-  );
+  const { getSiteData, getEventTracking, getPageData } =
+    useContext(SiteTrackingContext);
   const result = useMemo(() => {
     const eventTracking = getEventTracking();
 
