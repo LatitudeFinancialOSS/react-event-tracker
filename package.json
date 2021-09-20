@@ -38,17 +38,16 @@
     "tracker",
     "analytics"
   ],
-  "homepage": "https://github.com/moroshko/react-event-tracker",
+  "homepage": "https://github.com/LatitudeFinancialOSS/react-event-tracker",
   "repository": {
     "type": "git",
-    "url": "https://github.com/moroshko/react-event-tracker.git"
+    "url": "https://github.com/LatitudeFinancialOSS/react-event-tracker.git"
   },
   "bugs": {
-    "url": "https://github.com/moroshko/react-event-tracker/issues"
+    "url": "https://github.com/LatitudeFinancialOSS/react-event-tracker/issues"
   },
   "files": [
     "dist"
   ],
-  "author": "Misha Moroshko <michael.moroshko@gmail.com>",
   "license": "MIT"
 }

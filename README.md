@@ -204,4 +204,4 @@ function Content() {
 
 ## Related
 
-- [tealium-tracker](https://github.com/moroshko/tealium-tracker) - Easily integrate with [Tealium](https://tealium.com)
+- [tealium-tracker](https://github.com/LatitudeFinancialOSS/tealium-tracker) - Easily integrate with [Tealium](https://tealium.com)
