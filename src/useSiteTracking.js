@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useRef,
   useEffect,
+  useContext,
 } from "react";
 
 export const SiteTrackingContext = createContext();
@@ -20,6 +21,9 @@ export default function useSiteTracking(trackingConfig) {
     return {
       getSiteData: () => {
         return trackingConfigRef.current.siteData;
+      },
+      setSiteData: (siteData) => {
+        trackingConfigRef.current.siteData = siteData;
       },
       getPageTracking: () => {
         return trackingConfigRef.current.pageTracking;
@@ -50,4 +54,8 @@ export default function useSiteTracking(trackingConfig) {
   return {
     SiteTracking,
   };
+}
+
+export function useSiteData() {
+  return useContext(SiteTrackingContext)
 }
